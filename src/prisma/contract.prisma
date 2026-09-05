@@ -1,0 +1,71 @@
+// NWIS - Nearby Wells Intelligence System
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String?
+  name      String?
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  wells     Well[]
+}
+
+model Well {
+  id          Int      @id @default(autoincrement())
+
+  wellId      String   @unique
+  name        String
+
+  latitude    Float
+  longitude   Float
+
+  totalDepth  Float?
+  formation   String?
+  status      String?
+
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+
+  ownerId     Int?
+  owner       User? @relation(fields: [ownerId], references: [id])
+
+  events      WellEvent[]
+  parameters  DrillingParameter[]
+}
+
+model WellEvent {
+  id          Int      @id @default(autoincrement())
+
+  eventType   String
+  startDepth  Float?
+  endDepth    Float?
+  severity    String?
+
+  description String?
+  mitigation  String?
+
+  wellId      Int
+  well        Well @relation(fields: [wellId], references: [id])
+
+  createdAt   TimestamptzString @default(now())
+}
+
+model DrillingParameter {
+  id          Int      @id @default(autoincrement())
+
+  depth       Float?
+
+  rop         Float?
+  wob         Float?
+  rpm         Float?
+  torque      Float?
+  mudWeight   Float?
+  pressure    Float?
+
+  wellId      Int
+  well        Well @relation(fields: [wellId], references: [id])
+
+  recordedAt  TimestamptzString @default(now())
+}

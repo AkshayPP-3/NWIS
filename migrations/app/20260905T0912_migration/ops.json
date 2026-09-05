@@ -1,0 +1,502 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.drillingParameter",
+    "label": "Create table \"drillingParameter\"",
+    "summary": "Creates table \"drillingParameter\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "drillingParameter"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"drillingParameter\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"drillingParameter\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"drillingParameter\"",
+        "sql": "CREATE TABLE \"public\".\"drillingParameter\" (\n  \"depth\" float8,\n  \"id\" SERIAL NOT NULL,\n  \"mudWeight\" float8,\n  \"pressure\" float8,\n  \"recordedAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"rop\" float8,\n  \"rpm\" float8,\n  \"torque\" float8,\n  \"wellId\" int4 NOT NULL,\n  \"wob\" float8,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"drillingParameter\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"drillingParameter\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.user",
+    "label": "Create table \"user\"",
+    "summary": "Creates table \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"user\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"user\"",
+        "sql": "CREATE TABLE \"public\".\"user\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"name\" text,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"username\" text,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"user\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.well",
+    "label": "Create table \"well\"",
+    "summary": "Creates table \"well\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "well"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"well\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"well\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"well\"",
+        "sql": "CREATE TABLE \"public\".\"well\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"formation\" text,\n  \"id\" SERIAL NOT NULL,\n  \"latitude\" float8 NOT NULL,\n  \"longitude\" float8 NOT NULL,\n  \"name\" text NOT NULL,\n  \"ownerId\" int4,\n  \"status\" text,\n  \"totalDepth\" float8,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"wellId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"well\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"well\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.wellEvent",
+    "label": "Create table \"wellEvent\"",
+    "summary": "Creates table \"wellEvent\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "wellEvent"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"wellEvent\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"wellEvent\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"wellEvent\"",
+        "sql": "CREATE TABLE \"public\".\"wellEvent\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"endDepth\" float8,\n  \"eventType\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"mitigation\" text,\n  \"severity\" text,\n  \"startDepth\" float8,\n  \"wellId\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"wellEvent\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"wellEvent\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.user.user_email_key",
+    "label": "Add unique constraint on \"user\" (email)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "user_email_key",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"user_email_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_email_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"user_email_key\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD CONSTRAINT \"user_email_key\" UNIQUE (\"email\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"user_email_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_email_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.well.well_wellId_key",
+    "label": "Add unique constraint on \"well\" (wellId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "well_wellId_key",
+        "table": "well"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"well_wellId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "well_wellId_key",
+          "public",
+          "\"public\".\"well\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"well_wellId_key\"",
+        "sql": "ALTER TABLE \"public\".\"well\" ADD CONSTRAINT \"well_wellId_key\" UNIQUE (\"wellId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"well_wellId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "well_wellId_key",
+          "public",
+          "\"public\".\"well\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.drillingParameter.drillingParameter_wellId_idx_efef2dbb",
+    "label": "Create index \"drillingParameter_wellId_idx_efef2dbb\" on \"drillingParameter\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "drillingParameter_wellId_idx_efef2dbb",
+        "table": "drillingParameter"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"drillingParameter_wellId_idx_efef2dbb\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"drillingParameter_wellId_idx_efef2dbb\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"drillingParameter_wellId_idx_efef2dbb\"",
+        "sql": "CREATE INDEX \"drillingParameter_wellId_idx_efef2dbb\" ON \"public\".\"drillingParameter\" (\"wellId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"drillingParameter_wellId_idx_efef2dbb\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"drillingParameter_wellId_idx_efef2dbb\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.well.well_ownerId_idx_e2d0c1ef",
+    "label": "Create index \"well_ownerId_idx_e2d0c1ef\" on \"well\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "well_ownerId_idx_e2d0c1ef",
+        "table": "well"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"well_ownerId_idx_e2d0c1ef\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"well_ownerId_idx_e2d0c1ef\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"well_ownerId_idx_e2d0c1ef\"",
+        "sql": "CREATE INDEX \"well_ownerId_idx_e2d0c1ef\" ON \"public\".\"well\" (\"ownerId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"well_ownerId_idx_e2d0c1ef\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"well_ownerId_idx_e2d0c1ef\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.wellEvent.wellEvent_wellId_idx_efef2dbb",
+    "label": "Create index \"wellEvent_wellId_idx_efef2dbb\" on \"wellEvent\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "wellEvent_wellId_idx_efef2dbb",
+        "table": "wellEvent"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"wellEvent_wellId_idx_efef2dbb\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"wellEvent_wellId_idx_efef2dbb\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"wellEvent_wellId_idx_efef2dbb\"",
+        "sql": "CREATE INDEX \"wellEvent_wellId_idx_efef2dbb\" ON \"public\".\"wellEvent\" (\"wellId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"wellEvent_wellId_idx_efef2dbb\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"wellEvent_wellId_idx_efef2dbb\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.drillingParameter.drillingParameter_wellId_fkey",
+    "label": "Add foreign key \"drillingParameter_wellId_fkey\" on \"drillingParameter\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "drillingParameter_wellId_fkey",
+        "table": "drillingParameter"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"drillingParameter_wellId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "drillingParameter_wellId_fkey",
+          "public",
+          "\"public\".\"drillingParameter\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"drillingParameter_wellId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"drillingParameter\"\nADD CONSTRAINT \"drillingParameter_wellId_fkey\"\nFOREIGN KEY (\"wellId\")\nREFERENCES \"public\".\"well\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"drillingParameter_wellId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "drillingParameter_wellId_fkey",
+          "public",
+          "\"public\".\"drillingParameter\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.well.well_ownerId_fkey",
+    "label": "Add foreign key \"well_ownerId_fkey\" on \"well\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "well_ownerId_fkey",
+        "table": "well"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"well_ownerId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "well_ownerId_fkey",
+          "public",
+          "\"public\".\"well\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"well_ownerId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"well\"\nADD CONSTRAINT \"well_ownerId_fkey\"\nFOREIGN KEY (\"ownerId\")\nREFERENCES \"public\".\"user\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"well_ownerId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "well_ownerId_fkey",
+          "public",
+          "\"public\".\"well\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.wellEvent.wellEvent_wellId_fkey",
+    "label": "Add foreign key \"wellEvent_wellId_fkey\" on \"wellEvent\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "wellEvent_wellId_fkey",
+        "table": "wellEvent"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"wellEvent_wellId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "wellEvent_wellId_fkey",
+          "public",
+          "\"public\".\"wellEvent\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"wellEvent_wellId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"wellEvent\"\nADD CONSTRAINT \"wellEvent_wellId_fkey\"\nFOREIGN KEY (\"wellId\")\nREFERENCES \"public\".\"well\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"wellEvent_wellId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "wellEvent_wellId_fkey",
+          "public",
+          "\"public\".\"wellEvent\""
+        ]
+      }
+    ]
+  }
+]
