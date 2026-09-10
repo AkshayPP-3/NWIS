@@ -14,8 +14,10 @@ import FormationView from "@/components/formations/FormationView";
 import DrillingRiskView from "@/components/risk/DrillingRiskView";
 import AIAssistantView from "@/components/ai/AIAssistantView";
 import AnalyticsView from "@/components/analytics/AnalyticsView";
+import TargetAnalysisView from "@/components/target/TargetAnalysisView";
 
-import type { Well, WellEvent, TargetLocation, FilterState } from "@/types/well";
+import type { Well, WellEvent, TargetLocation, FilterState, TargetProfile } from "@/types/well";
+import { evaluateTargetOffsetWells } from "@/lib/relevanceEngine";
 import { calculateHaversineDistanceKm } from "@/lib/geo";
 import { AlertCircle, RotateCcw } from "lucide-react";
 
@@ -31,6 +33,14 @@ export default function Home() {
   // Selection state
   const [selectedWell, setSelectedWell] = useState<Well | null>(null);
   const [targetLocation, setTargetLocation] = useState<TargetLocation | null>(null);
+  const [targetProfile, setTargetProfile] = useState<TargetProfile>({
+    name: "PROPOSED-EXPLORATION-01",
+    latitude: 27.38,
+    longitude: 95.63,
+    targetFormation: "Barail Formation",
+    plannedDepth: 3200,
+    searchRadiusKm: 50,
+  });
   const [comparisonWellIds, setComparisonWellIds] = useState<string[]>([
     "WELL-001",
     "WELL-002",
@@ -179,6 +189,29 @@ export default function Home() {
     setActiveTab("map");
   };
 
+  // Synchronized target location setter from map or presets
+  const handleSetTargetLocation = (loc: TargetLocation | null) => {
+    setTargetLocation(loc);
+    if (loc) {
+      setTargetProfile((prev) => ({
+        ...prev,
+        latitude: loc.latitude,
+        longitude: loc.longitude,
+      }));
+    }
+  };
+
+  // Evaluate candidate offset wells for map highlighting
+  const targetEvaluation = useMemo(() => {
+    return evaluateTargetOffsetWells(targetProfile, wells);
+  }, [targetProfile, wells]);
+
+  const bestFitWellId = targetEvaluation.bestFitWell?.well.wellId || null;
+  const candidateWellIds = useMemo(
+    () => targetEvaluation.topCandidates.map((c) => c.well.wellId),
+    [targetEvaluation]
+  );
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
       {/* 1. Header with System Telemetry and View Tabs */}
@@ -271,9 +304,13 @@ export default function Home() {
                       selectedWell={selectedWell}
                       onSelectWell={(well) => setSelectedWell(well)}
                       targetLocation={targetLocation}
-                      onSetTargetLocation={setTargetLocation}
+                      onSetTargetLocation={handleSetTargetLocation}
                       comparisonWellIds={comparisonWellIds}
                       onToggleCompare={handleToggleCompare}
+                      bestFitWellId={bestFitWellId}
+                      candidateWellIds={candidateWellIds}
+                      searchRadiusKm={targetProfile.searchRadiusKm}
+                      onNavigateToTargetAnalysis={() => setActiveTab("target")}
                     />
                   </div>
 
@@ -296,6 +333,26 @@ export default function Home() {
                   )}
                 </div>
               </div>
+            )}
+
+            {/* VIEW 0 / FLAGSHIP: Target Intelligence & Best-Fit Offset Selection */}
+            {activeTab === "target" && (
+              <TargetAnalysisView
+                wells={wells}
+                initialTarget={targetProfile}
+                onTargetChange={(t) => {
+                  setTargetProfile(t);
+                  setTargetLocation({ latitude: t.latitude, longitude: t.longitude });
+                }}
+                onSelectWellOnMap={(well) => {
+                  setSelectedWell(well);
+                  setActiveTab("map");
+                }}
+                onNavigateToComparison={(ids) => {
+                  setComparisonWellIds(ids);
+                  setActiveTab("compare");
+                }}
+              />
             )}
 
             {/* VIEW 2: Nearby Wells Intelligence */}

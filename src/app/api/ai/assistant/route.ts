@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       lowerQuery.includes(w.name.toLowerCase())
     );
 
-    let primaryWell =
+    const primaryWell =
       mentionedWells[0] ||
       (contextWellId ? wells.find((w) => w.wellId === contextWellId) : null);
 

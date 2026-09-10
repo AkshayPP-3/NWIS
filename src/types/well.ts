@@ -147,3 +147,12 @@ export interface FilterState {
   maxDistanceKm: number | null;
 }
 
+export type {
+  TargetProfile,
+  OffsetWellCandidate,
+  RelevanceScoreBreakdown,
+  TargetEvaluationResult,
+  NearbyVsRelevantContrast,
+} from "@/lib/relevanceEngine";
+
+

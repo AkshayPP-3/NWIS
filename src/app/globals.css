@@ -24,3 +24,29 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Leaflet Customizations for NWIS Dark Control Room */
+.leaflet-container {
+  background: #09090b !important;
+  font-family: inherit;
+}
+
+.nwis-leaflet-well-marker,
+.nwis-leaflet-target-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+  display: none !important;
+}

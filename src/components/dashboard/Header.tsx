@@ -14,10 +14,12 @@ import {
   BarChart3,
   Database,
   Radio,
+  Target,
 } from "lucide-react";
 
 export type ActiveTab =
   | "map"
+  | "target"
   | "nearby"
   | "compare"
   | "drilling"
@@ -45,6 +47,13 @@ export default function Header({
   const tabs = [
     { id: "map" as ActiveTab, label: "GIS Map", icon: MapIcon },
     {
+      id: "target" as ActiveTab,
+      label: "Target Intelligence ⭐",
+      icon: Target,
+      badge: "SIH Flagship",
+      highlight: true,
+    },
+    {
       id: "nearby" as ActiveTab,
       label: "Nearby Intelligence",
       icon: Navigation,
@@ -60,7 +69,7 @@ export default function Header({
     { id: "events" as ActiveTab, label: "Well Events", icon: AlertTriangle },
     { id: "formations" as ActiveTab, label: "Geological Formations", icon: Layers },
     { id: "risks" as ActiveTab, label: "Risk Intelligence", icon: ShieldAlert },
-    { id: "ai" as ActiveTab, label: "AI Assistant", icon: Bot, highlight: true },
+    { id: "ai" as ActiveTab, label: "AI Assistant", icon: Bot },
     { id: "analytics" as ActiveTab, label: "Analytics", icon: BarChart3 },
   ];
 

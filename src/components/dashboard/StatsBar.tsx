@@ -53,7 +53,7 @@ export default function StatsBar({
       id: "ALL",
       label: "Total Wells",
       value: totalWells,
-      subtext: "Assam-Arakan Basin",
+      subtext: "Pan-India Basins",
       icon: Boxes,
       color: "text-zinc-100",
       bgColor: "bg-zinc-900/60 hover:bg-zinc-800/80 border-zinc-800",
