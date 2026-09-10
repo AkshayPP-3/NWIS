@@ -239,7 +239,7 @@ export default function Home() {
         {/* Loading State */}
         {loading && (
           <div className="p-6">
-            <div className="h-[600px] rounded-xl bg-zinc-900 border border-zinc-800 animate-pulse flex items-center justify-center">
+            <div className="h-150 rounded-xl bg-zinc-900 border border-zinc-800 animate-pulse flex items-center justify-center">
               <span className="text-sm font-mono text-zinc-400">
                 Loading NWIS Telemetry & Geospatial Maps...
               </span>
@@ -316,7 +316,7 @@ export default function Home() {
 
                   {/* Well Intelligence Panel (Rendered when a well is selected) */}
                   {selectedWell && (
-                    <div className="h-[650px] lg:col-span-1">
+                    <div className="h-162.5 lg:col-span-1">
                       <WellIntelligencePanel
                         well={selectedWell}
                         onClose={() => setSelectedWell(null)}

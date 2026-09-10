@@ -203,7 +203,7 @@ export default function WellEventsView({
             </p>
 
             {/* Depth Timeline Column */}
-            <div className="relative h-[480px] w-full border-l-2 border-r-2 border-zinc-800 bg-zinc-900/30 rounded px-2">
+            <div className="relative h-120 w-full border-l-2 border-r-2 border-zinc-800 bg-zinc-900/30 rounded px-2">
               {/* Depth Interval Indicators */}
               {[500, 1000, 1500, 2000, 2500, 3000, 3500, 4000].map((depth) => {
                 const topPct = (depth / 4200) * 100;
