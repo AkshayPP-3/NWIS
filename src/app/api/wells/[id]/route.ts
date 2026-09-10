@@ -25,8 +25,10 @@ export async function GET(
     }
 
     // Fetch related events and drilling parameters
-    const events = await db.orm.public.WellEvent.where({ wellId: well.id }).all();
-    const parameters = await db.orm.public.DrillingParameter.where({ wellId: well.id }).all();
+    const [events, parameters] = await Promise.all([
+      db.orm.public.WellEvent.where({ wellId: well.id }).all(),
+      db.orm.public.DrillingParameter.where({ wellId: well.id }).all(),
+    ]);
 
     return NextResponse.json({
       ...well,

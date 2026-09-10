@@ -43,26 +43,13 @@ export default function WellEventsView({
   // Fetch events for all wells
   useEffect(() => {
     setLoading(true);
-    // Fetch all wells' events through parallel requests
-    Promise.all(
-      wells.map((w) =>
-        fetch(`/api/wells/${w.wellId}`)
-          .then((r) => r.json())
-          .then((data) => ({
-            well: w,
-            events: (data?.events || []) as WellEvent[],
-          }))
-      )
-    )
-      .then((results) => {
-        const aggregated: (WellEvent & { well?: Well })[] = [];
-        results.forEach(({ well, events: wellEvents }) => {
-          wellEvents.forEach((evt) => {
-            aggregated.push({ ...evt, well });
-          });
-        });
-
-        // Sort by startDepth ascending
+    fetch("/api/wells/events")
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+        return response.json();
+      })
+      .then((data) => {
+        const aggregated = (data || []) as (WellEvent & { well?: Well })[];
         aggregated.sort((a, b) => (a.startDepth || 0) - (b.startDepth || 0));
         setEvents(aggregated);
         setLoading(false);

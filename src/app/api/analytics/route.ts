@@ -4,8 +4,10 @@ import type { FieldAnalytics } from "@/types/well";
 
 export async function GET() {
   try {
-    const wells = await db.orm.public.Well.where({}).all();
-    const events = await db.orm.public.WellEvent.where({}).all();
+    const [wells, events] = await Promise.all([
+      db.orm.public.Well.where({}).all(),
+      db.orm.public.WellEvent.where({}).all(),
+    ]);
 
     const statusCounts = {
       completed: 0,
