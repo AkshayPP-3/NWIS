@@ -256,7 +256,7 @@ export default function LeafletMap({
   const targetIcon = useMemo(() => createTargetDivIcon(), []);
 
   return (
-    <div className="relative h-[650px] w-full overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-2xl">
+    <div className="relative h-162.5 w-full overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-2xl">
       <MapContainer
         center={initialCenter}
         zoom={initialZoom}
@@ -337,7 +337,7 @@ export default function LeafletMap({
             >
               {/* Hover Tooltip */}
               <Tooltip direction="top" offset={[0, -32]} opacity={1}>
-                <div className="rounded-lg bg-zinc-950 p-2.5 text-zinc-100 shadow-2xl border border-zinc-750 font-sans text-xs min-w-[190px]">
+                <div className="rounded-lg bg-zinc-950 p-2.5 text-zinc-100 shadow-2xl border border-zinc-750 font-sans text-xs min-w-47.5">
                   <div className="flex items-center justify-between gap-2 border-b border-zinc-800 pb-1">
                     <span className="font-extrabold text-amber-400 font-mono flex items-center gap-1">
                       {isBestFit && "⭐ "}
@@ -347,7 +347,7 @@ export default function LeafletMap({
                       {isBestFit ? "Best-Fit Offset" : well.status}
                     </span>
                   </div>
-                  <p className="mt-1 text-[11px] font-medium text-zinc-300 truncate max-w-[180px]">
+                  <p className="mt-1 text-[11px] font-medium text-zinc-300 truncate max-w-45">
                     {well.name}
                   </p>
                   <div className="mt-1.5 space-y-0.5 text-[10px] text-zinc-400">
@@ -407,7 +407,7 @@ export default function LeafletMap({
       </MapContainer>
 
       {/* Floating HUD Controls (Top-Left) */}
-      <div className="absolute left-4 top-4 z-[1000] flex flex-col gap-2">
+      <div className="absolute left-4 top-4 z-1000 flex flex-col gap-2">
         <button
           onClick={() => setFitTrigger((prev) => prev + 1)}
           title="Fit view to all wells"
@@ -439,7 +439,7 @@ export default function LeafletMap({
       </div>
 
       {/* Map Legend (Bottom-Left) */}
-      <div className="absolute bottom-4 left-4 z-[1000] rounded-xl border border-zinc-800 bg-zinc-950/90 p-3 shadow-2xl backdrop-blur-md text-xs text-zinc-300 max-w-[270px]">
+      <div className="absolute bottom-4 left-4 z-1000 rounded-xl border border-zinc-800 bg-zinc-950/90 p-3 shadow-2xl backdrop-blur-md text-xs text-zinc-300 max-w-67.5">
         <div className="flex items-center justify-between border-b border-zinc-800 pb-1.5 mb-2">
           <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1">
             <Layers className="h-3 w-3 text-amber-400" /> Leaflet GIS Legend
@@ -485,7 +485,7 @@ export default function LeafletMap({
 
       {/* Target Location Offset Callout (Bottom-Right) */}
       {targetLocation && (
-        <div className="absolute bottom-4 right-4 z-[1000] rounded-xl border border-cyan-500/40 bg-zinc-950/95 p-3.5 shadow-2xl backdrop-blur-md max-w-sm">
+        <div className="absolute bottom-4 right-4 z-1000 rounded-xl border border-cyan-500/40 bg-zinc-950/95 p-3.5 shadow-2xl backdrop-blur-md max-w-sm">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-cyan-400">
               <Crosshair className="h-4 w-4 animate-spin" />
